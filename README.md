@@ -1,2 +1,2 @@
 # GifTastic
-create a dynamic web page which displays themed gifs fromt the Giphy API.
+Create a dynamic web page which displays themed gifs from the Giphy API.
