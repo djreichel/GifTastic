@@ -1,7 +1,7 @@
 //  alert("animals");
 
 var topics = ["dogs", "cats", "fish", "birds", "squirrels", "rabbits", "ferrets", "chipmunks", "hamsters", "gerbils", "spiders", "monkees", "elephants", "rhinos"];
-
+var userInput;
 // Grabbing and storing the data-animal property value from the button
 //var animal = $(this).attr("#animal-buttons");
 // Constructing a queryURL using the animal names
@@ -22,13 +22,14 @@ function animalButtonClicked() {
 }
 
 function submitButtonClicked() {
-    var userInput = $('#animal-input').val();
+     userInput = $('#animal-input').val();
 
     if (userInput) {
         $('#animal-buttons').append("<button type='button' onclick='searchGif(\"" + userInput + "\")' class='btn btn-primary' value=' " + userInput + "'> " + userInput + " </button>");
     }
     console.log(userInput);
 }
+gifName = userInput;
 
 function searchGif(gifName) {
     $.ajax({
@@ -36,35 +37,64 @@ function searchGif(gifName) {
             method: "GET"
         })
         .then(function(response) {
+            console.log(response);
             displayGif(response); //displays the gifs
                 console.log(queryURL);
-                console.log(response);
                 console.log("entered searchGif function");
         })
 }
 
 function displayGif(response) {
-    $("#animals").empty();
+    $('#animals').empty();
+  
     for (var i = 0; i < response.data.length; i++) {
-        var rating = "<div class='ratings'> Rating:  " + (response.data[i].rating) + " </div>";
-        var image = rating + '<img src= " ' + response.data[i].images.fixed_height_still.url +
-            " ' data-still=' " + response.data[i].images.fixed_height_still.url +
-            " ' data-animate=' " + response.data[i].images.fixed_height.url + '" data-state="still" class="movImage" style= "width:250px; height:250px">';
-
-        image = "<div class='col-md-12'>" + image + "</div>";
-        $("#animals").append(image);
-        console.log("entered displayGif function");
+      var static = response.data[i].images.fixed_height_still.url;
+      var dynamic = response.data[i].images.fixed_height.url;
+      var rating = `<div class='ratings'>Rating: ${
+        response.data[i].rating
+      }</div>`;
+      var image = `<img src=${static} data-still=${static} data-animate=${dynamic} class="movImage" style= "width:250px; height:250px">`;
+      var giphyDisplay = `<div class='col-md-12'>${rating}${image}</div>`;
+  
+      $('#animals').append(giphyDisplay);
+      console.log('entered displayGif function');
     }
-
-    $("#animals").on('click', function() {
-        var state = $(this).attr('data-state');
-        if (state == 'still') {
-            $(this).attr('src', $(this).attr("data-animate"));
-            $(this).attr('data-state', 'animate');
-        } else {
-            $(this).attr('src', $(this).attr("data-still"));
-            $(this).attr('data-state', 'still');
-        }
-
+    // data-state="still"
+  
+    $('#animals').on('click', function() {
+      var state = $(this).attr('data-state');
+      if (state == 'still') {
+        $(this).attr('src', $(this).attr('data-animate'));
+        $(this).attr('data-state', 'animate');
+      } else {
+        $(this).attr('src', $(this).attr('data-still'));
+        $(this).attr('data-state', 'still');
+      }
     });
-}
+  }
+
+// function displayGif(response) {
+//     $("#animals").empty();
+//     for (var i = 0; i < response.data.length; i++) {
+//         var rating = "<div class='ratings'> Rating:  " + (response.data[i].rating) + " </div>";
+//         var image = rating + '<img src= " ' + response.data[i].images.fixed_height_still.url +
+//             " ' data-still=' " + response.data[i].images.fixed_height_still.url +
+//             " ' data-animate=' " + response.data[i].images.fixed_height.url + '" data-state="still" class="movImage" style= "width:250px; height:250px">';
+
+//         image = "<div class='col-md-12'>" + image + "</div>";
+//         $("#animals").append(image);
+//         console.log("entered displayGif function");
+//     }
+
+//     $("#animals").on('click', function() {
+//         var state = $(this).attr('data-state');
+//         if (state == 'still') {
+//             $(this).attr('src', $(this).attr("data-animate"));
+//             $(this).attr('data-state', 'animate');
+//         } else {
+//             $(this).attr('src', $(this).attr("data-still"));
+//             $(this).attr('data-state', 'still');
+//         }
+
+//     });
+// }
